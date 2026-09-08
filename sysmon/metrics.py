@@ -1,14 +1,34 @@
 import psutil
+import time
 
 def _read_proc_stat_cpu_line():
-    with open("/proc/stat", r) as f:
-        stats = f.read()
+    with open("/proc/stat", "r") as f:
+        stats = f.readline()
 
     result = stats.split()[1:]
     return result
 
 def get_cpu_percent_manual(sample_interval=0.5):
+    """
+    Takes two samples of /proc/stat 'sample_interval' seconds apart,
+    computes and returns CPU usage as a float percentage (0-100).
+    """
+    sample1 = _read_proc_stat_cpu_line()
+    time.sleep(sample_interval)
+    sample2 = _read_proc_stat_cpu_line()
+    deltas = [0]*len(sample1)
+    
+    for i in range(len(sample1)):
+        deltas[i] = int(sample2[i]) - int(sample1[i])
 
+    total_delta = 0
+    idle_delta = deltas[3]
+
+    for delta in deltas:
+        total_delta += delta
+    
+    usage_percent = (total_delta-idle_delta)/total_delta * 100
+    return usage_percent
 
 def get_psutil_metrics():
     """
