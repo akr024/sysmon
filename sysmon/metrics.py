@@ -1,5 +1,15 @@
 import psutil
 
+def _read_proc_stat_cpu_line():
+    with open("/proc/stat", r) as f:
+        stats = f.read()
+
+    result = stats.split()[1:]
+    return result
+
+def get_cpu_percent_manual(sample_interval=0.5):
+
+
 def get_psutil_metrics():
     """
     'cpu_percent' (float)
