@@ -1,5 +1,6 @@
 import psutil
 import time
+from datetime import datetime
 
 def _read_proc_stat_cpu_line():
     with open("/proc/stat", "r") as f:
@@ -54,3 +55,18 @@ def get_psutil_metrics():
     metrics["net_bytes_recv"] = netObj.bytes_recv
 
     return metrics
+
+def main():
+    try:
+        while True:
+            ps_metric = get_psutil_metrics()
+            ps_metric_cpu = ps_metric["cpu_percent"]
+            manual_cpu = get_cpu_percent_manual()
+            print(f"{datetime.now().strftime('%H:%M:%S')} | CPU psutil: {ps_metric_cpu:.2f}% | CPU manual: {manual_cpu:.2f}%")
+            time.sleep(2)
+    except KeyboardInterrupt:
+        print("\nStopped by user.")
+
+
+if __name__ == "__main__":
+    main()
