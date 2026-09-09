@@ -1,8 +1,8 @@
 # sysmon — Linux System Health Monitor & Alerting Daemon
 
 ## Core Features (v1 scope)
-- [DONE] Collect CPU / memory / disk / network metrics
-- [DONE] Log metrics with rotation
+- [x] Collect CPU / memory / disk / network metrics
+- [x] Log metrics with rotation
 - [ ] Threshold-based alerting with cooldown
 - [ ] CLI: run / check / alerts
 - [ ] Runs as a systemd service (non-root)
