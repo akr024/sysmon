@@ -1,6 +1,8 @@
 import psutil
 import time
 from datetime import datetime
+from logger import get_logger
+import json
 
 def _read_proc_stat_cpu_line():
     with open("/proc/stat", "r") as f:
@@ -10,10 +12,6 @@ def _read_proc_stat_cpu_line():
     return result
 
 def get_cpu_percent_manual(sample_interval=0.5):
-    """
-    Takes two samples of /proc/stat 'sample_interval' seconds apart,
-    computes and returns CPU usage as a float percentage (0-100).
-    """
     sample1 = _read_proc_stat_cpu_line()
     time.sleep(sample_interval)
     sample2 = _read_proc_stat_cpu_line()
@@ -32,14 +30,6 @@ def get_cpu_percent_manual(sample_interval=0.5):
     return usage_percent
 
 def get_psutil_metrics():
-    """
-    'cpu_percent' (float)
-    'mem_percent' (float)
-    'disk_percent' (float)
-    'net_bytes_sent' (int)
-    'net_bytes_recv' (int)
-    """
-
     metrics = {}
     
     metrics["cpu_percent"] = psutil.cpu_percent(interval=0.5)
@@ -58,11 +48,34 @@ def get_psutil_metrics():
 
 def main():
     try:
+        logger = get_logger()
         while True:
             ps_metric = get_psutil_metrics()
             ps_metric_cpu = ps_metric["cpu_percent"]
             manual_cpu = get_cpu_percent_manual()
-            print(f"{datetime.now().strftime('%H:%M:%S')} | CPU psutil: {ps_metric_cpu:.2f}% | CPU manual: {manual_cpu:.2f}%")
+
+            metric_mem = ps_metric["mem_percent"]
+            metric_disk = ps_metric["disk_percent"]
+            metric_net_sent = ps_metric["net_bytes_sent"]
+            metric_net_recv = ps_metric["net_bytes_recv"]
+
+            nowTime = datetime.now().strftime('%H:%M:%S')
+
+            print(f"{nowTime} | CPU psutil: {ps_metric_cpu:.2f}% | CPU manual: {manual_cpu:.2f}%" 
+                  f" | Memory: {metric_mem:.2f}% | Disk: {metric_disk:.2f}% | Network (Sent): {metric_net_sent}" 
+                  f" | Network (Received): {metric_net_recv}")
+
+            info_dict = {
+                "cpu_percent_manual": manual_cpu,
+                "cpu_percent_psutil": ps_metric_cpu,
+                "mem_percent": metric_mem,
+                "disk_percent": metric_disk,
+                "net_bytes_sent": metric_net_sent,
+                "net_bytes_recv": metric_net_recv
+            }
+
+            json_info = json.dumps(info_dict)
+            logger.info(json_info)
             time.sleep(2)
     except KeyboardInterrupt:
         print("\nStopped by user.")
