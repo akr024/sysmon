@@ -1,0 +1,10 @@
+thresholds:
+  cpu_percent: 85
+  mem_percent: 90
+  disk_percent: 90
+
+alert_cooldown_seconds: 300
+
+paths:
+  metrics_log: /var/log/sysmon/sysmon.log
+  alerts_log: /var/log/sysmon/alerts.log
