@@ -3,6 +3,8 @@ import time
 from datetime import datetime
 from logger import get_logger
 import json
+from config import load_config
+from alerts import check_thresholds
 
 def _read_proc_stat_cpu_line():
     with open("/proc/stat", "r") as f:
@@ -49,6 +51,9 @@ def get_psutil_metrics():
 def main():
     try:
         logger = get_logger()
+        config = load_config()
+        last_alert_times = {}
+
         while True:
             ps_metric = get_psutil_metrics()
             ps_metric_cpu = ps_metric["cpu_percent"]
@@ -73,6 +78,8 @@ def main():
                 "net_bytes_sent": metric_net_sent,
                 "net_bytes_recv": metric_net_recv
             }
+
+            last_alert_times = check_thresholds(metrics=ps_metric, config=config,last_alert_times=last_alert_times)
 
             json_info = json.dumps(info_dict)
             logger.info(json_info)
