@@ -1,0 +1,15 @@
+[Unit]
+Description=sysmon - Linux system health monitor and alerting daemon
+After=network.target
+
+[Service]
+Type=simple
+User=sysmon
+Group=sysmon
+WorkingDirectory=/home/akr/projects/sysmon/sysmon
+ExecStart=/home/akr/projects/sysmon/venv/bin/python3 /home/akr/projects/sysmon/sysmon/cli.py run
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
