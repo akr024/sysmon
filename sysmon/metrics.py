@@ -1,3 +1,4 @@
+import signal
 import psutil
 import time
 from datetime import datetime
@@ -51,6 +52,12 @@ def get_cpu_percent_manual(sample_interval=0.5):
 
 
 def run_loop(config: dict, sleep_seconds: int = 2) -> None:
+    def handle_sigterm(signum, frame):
+        print("Received SIGTERM, shutting down cleanly...")
+        raise KeyboardInterrupt
+
+    signal.signal(signal.SIGTERM, handle_sigterm)
+    
     logger = get_logger()
     last_alert_times = {}
 
