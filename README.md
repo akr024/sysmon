@@ -5,7 +5,7 @@
 - [x] Log metrics with rotation
 - [x] Threshold-based alerting with cooldown
 - [x] CLI: run / check / alerts
-- [ ] Runs as a systemd service (non-root)
+- [x] Runs as a systemd service (non-root)
 - [ ] journalctl log watching for error patterns
 - [ ] Unit tests for core logic
 - [ ] install.sh for one-shot setup
