@@ -2,6 +2,7 @@ import argparse
 import sys
 from config import load_config, ConfigError
 from metrics import run_loop, run_check, show_recent_alerts
+from log_watcher import watch_journal
 
 DEFAULT_CONFIG_PATH = "/home/akr/projects/sysmon/config.yaml"
 
@@ -13,7 +14,8 @@ def main():
     run_parser = subparsers.add_parser("run", help="Run continuous monitoring loop")
     run_parser.add_argument("--config", default=DEFAULT_CONFIG_PATH, help="Path to config.yaml")
     run_parser.add_argument("--interval", type=int, default=2, help="Seconds between checks")
-
+    watch_parser = subparsers.add_parser("watch-logs", help="Watch systemd journal for error patterns")
+    watch_parser.add_argument("--config", default=DEFAULT_CONFIG_PATH, help="Path to config.yaml")
     check_parser = subparsers.add_parser("check", help="Run a single health check and exit")
     check_parser.add_argument("--config", default=DEFAULT_CONFIG_PATH, help="Path to config.yaml")
 
@@ -46,7 +48,8 @@ def main():
 
     elif args.command == "alerts":
         show_recent_alerts(config["paths"]["alerts_log"], args.lines)
-
+    elif args.command == "watch-logs":
+        watch_journal(config["paths"]["alerts_log"])
 
 if __name__ == "__main__":
     main()
