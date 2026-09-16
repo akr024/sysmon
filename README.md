@@ -6,7 +6,7 @@
 - [x] Threshold-based alerting with cooldown
 - [x] CLI: run / check / alerts
 - [x] Runs as a systemd service (non-root)
-- [ ] journalctl log watching for error patterns
+- [x] journalctl log watching for error patterns
 - [ ] Unit tests for core logic
 - [ ] install.sh for one-shot setup
 
