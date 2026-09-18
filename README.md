@@ -103,7 +103,3 @@ fi
 ## Known limitations
 
 This is a single-host tool by design - no dashboard, no remote/multi-host monitoring, no distributed anything. The log watcher's pattern matching includes broad terms like `error` and `fail`, which will produce real false positives on lines that happen to contain those words innocuously; a more robust version would need an allowlist or more specific patterns. Config validation checks types and ranges but doesn't yet handle every malformed-YAML shape gracefully - a `thresholds:` value that's a string instead of a nested mapping will currently raise an `AttributeError` instead of the cleaner `ConfigError` everything else uses.
-
-## Troubleshooting
-
-Getting this running under systemd surfaced three separate, real permission problems, each needing a different diagnostic approach - see [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) for the full writeup.
