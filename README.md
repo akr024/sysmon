@@ -98,7 +98,7 @@ fi
 
 **Why the log watcher runs as a separate mode instead of a background thread inside the main loop.** I considered threading it into `run_loop()` directly, but given the time I had, running it as its own independent CLI subcommand was simpler to get right and gives cleaner failure isolation - if the log watcher has a problem, it can't take metrics collection down with it. The tradeoff is you need two things running instead of one unified daemon, which I'd revisit if I had more time.
 
-**Why testing focuses on pure logic and skips the main loop.** `check_thresholds()`, `load_config()`, and `run_check()`'s exit-code logic are all pure functions - same input, same output, no dependency on live system state — so they're cheap to test exhaustively with made-up data. `run_loop()` and the actual `psutil` calls depend on real, unpredictable hardware state and run forever, which would need heavier integration-testing machinery to test meaningfully. I tested the parts where tests add real value instead of chasing full coverage for its own sake.
+**Why testing focuses on pure logic and skips the main loop.** `check_thresholds()`, `load_config()`, and `run_check()`'s exit-code logic are all pure functions - same input, same output, no dependency on live system state - so they're cheap to test exhaustively with made-up data. `run_loop()` and the actual `psutil` calls depend on real, unpredictable hardware state and run forever, which would need heavier integration-testing machinery to test meaningfully. I tested the parts where tests add real value instead of chasing full coverage for its own sake.
 
 ## Known limitations
 
