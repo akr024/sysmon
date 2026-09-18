@@ -1,4 +1,4 @@
-# sysmon
+# sysmon - Linux Health Monitoring & Alerting Daemon
 
 A lightweight Linux system health monitor and alerting daemon, written in Python. It watches CPU, memory, disk, and network usage, logs everything in a structured format, raises alerts when thresholds are breached, and runs as a proper systemd service under its own unprivileged user.
 
